@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1f2937;
+    background-color: #fcfcfc;
+  }
+}
+
+/* Custom smooth transitions and brand colors */
+.bg-ridge-gold {
+  background-color: #DD9C37;
+}
+
+.text-ridge-gold {
+  color: #DD9C37;
+}
+
+.border-ridge-gold {
+  border-color: #DD9C37;
+}

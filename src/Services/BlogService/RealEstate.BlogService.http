@@ -1,0 +1,6 @@
+@RealEstate.BlogService_HostAddress = http://localhost:5232
+
+GET {{RealEstate.BlogService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

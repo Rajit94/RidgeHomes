@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/ApiGateway/">
+    <Project Path="src/ApiGateway/RealEstate.YarpGateway/RealEstate.YarpGateway.csproj" />
+  </Folder>
+  <Folder Name="/src/Services/" />
+  <Folder Name="/src/Services/BlogService/">
+    <Project Path="src/Services/BlogService/RealEstate.BlogService.csproj" />
+  </Folder>
+  <Folder Name="/src/Services/InquiryService/">
+    <Project Path="src/Services/InquiryService/RealEstate.InquiryService.csproj" />
+  </Folder>
+  <Folder Name="/src/Services/PropertyService/">
+    <Project Path="src/Services/PropertyService/RealEstate.PropertyService.csproj" />
+  </Folder>
+</Solution>
