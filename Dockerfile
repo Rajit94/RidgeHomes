@@ -10,7 +10,7 @@ COPY src/Services/InquiryService/*.csproj src/Services/InquiryService/
 COPY src/Services/BlogService/*.csproj src/Services/BlogService/
 
 # Restore dependencies
-RUN dotnet restore
+RUN dotnet restore RealEstatePlatform.sln
 
 # Copy all source code
 COPY src/ src/
