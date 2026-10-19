@@ -7,28 +7,18 @@ builder.Services.AddReverseProxy()
 // Enable CORS for Frontend Client (Vite port 5173 or any dev origin)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowClientApp", policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins(
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "https://ridge-homes.vercel.app"
-)
+        policy.SetIsOriginAllowed(_ => true)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
-    });
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
     });
 });
 
 var app = builder.Build();
 
-app.UseCors("AllowClientApp");
+app.UseCors("AllowAll");
 
 // Health check endpoint for Gateway
 app.MapGet("/", () => Results.Ok(new
