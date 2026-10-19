@@ -203,9 +203,20 @@ export default function AdminPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 text-xs sm:text-sm">
-                    {inquiries.map((inq) => (
-                      <tr key={inq.id} className="hover:bg-amber-50/40 transition-colors">
-                        <td className="px-6 py-4 font-bold text-gray-900">{inq.name}</td>
+                    {inquiries.map((inq) => {
+                      const isRecent = inq.isNew || (Date.now() - new Date(inq.createdAt).getTime() < 1000 * 60 * 60 * 24);
+                      return (
+                      <tr key={inq.id} className={`${isRecent ? 'bg-amber-50/50' : ''} hover:bg-amber-100/40 transition-colors`}>
+                        <td className="px-6 py-4">
+                          <div className="font-bold text-gray-900 flex items-center gap-2">
+                            <span>{inq.name}</span>
+                            {isRecent && (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-700 border border-emerald-300 animate-pulse">
+                                NEW LEAD
+                              </span>
+                            )}
+                          </div>
+                        </td>
                         <td className="px-6 py-4 space-y-1">
                           <div className="flex items-center gap-1.5 text-gray-800 font-medium">
                             <Phone className="w-3.5 h-3.5 text-gray-400" />
@@ -250,7 +261,8 @@ export default function AdminPage() {
                           })}
                         </td>
                       </tr>
-                    ))}
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

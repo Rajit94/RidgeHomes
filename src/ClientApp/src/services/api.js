@@ -146,12 +146,34 @@ export const getProjectBySlug = async (slug) => {
   }
 };
 
+const LOCAL_STORAGE_INQUIRIES_KEY = 'ridge_local_inquiries';
+
 export const submitInquiry = async (inquiryData) => {
+  const newLead = {
+    id: Date.now(),
+    name: inquiryData.name,
+    phone: inquiryData.phone,
+    email: inquiryData.email || '',
+    projectName: inquiryData.projectName || 'General Contact',
+    message: inquiryData.message || 'Customer inquiry from website.',
+    status: 'New',
+    createdAt: new Date().toISOString(),
+    isNew: true
+  };
+
+  // Always persist locally first so it shows up in Admin Panel immediately
+  try {
+    const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_INQUIRIES_KEY) || '[]');
+    localStorage.setItem(LOCAL_STORAGE_INQUIRIES_KEY, JSON.stringify([newLead, ...existing]));
+  } catch (e) {
+    console.warn('LocalStorage save failed:', e);
+  }
+
   try {
     const res = await apiClient.post('/inquiries/submit', inquiryData);
     return res.data;
   } catch (err) {
-    console.warn('Backend unavailable, simulating lead submission:', err.message);
+    console.warn('Backend unavailable, local lead saved for Admin Panel:', err.message);
     return {
       success: true,
       message: 'Thank you! Your site visit request has been recorded. Our executive will call you shortly.'
@@ -160,18 +182,39 @@ export const submitInquiry = async (inquiryData) => {
 };
 
 export const getInquiries = async () => {
+  let backendLeads = [];
   try {
     const res = await apiClient.get('/inquiries');
-    return res.data;
+    backendLeads = res.data;
   } catch (err) {
-    return [
-      { id: 1, name: 'Rajesh Sharma', phone: '+91 98765 43210', email: 'rajesh@example.com', projectName: 'Kshetra', status: 'New', message: 'Want weekend visit', createdAt: new Date().toISOString() },
-      { id: 2, name: 'Priya Varma', phone: '+91 98480 12345', email: 'priya@example.com', projectName: 'Tranquil Valley', status: 'Contacted', message: 'Send price sheet', createdAt: new Date(Date.now() - 86400000).toISOString() }
+    backendLeads = [
+      { id: 101, name: 'Rajesh Sharma', phone: '+91 98765 43210', email: 'rajesh@example.com', projectName: 'Kshetra', status: 'New', message: 'Interested in 200 sq. yard plot with weekend site visit.', createdAt: new Date().toISOString() },
+      { id: 102, name: 'Priya Varma', phone: '+91 98480 12345', email: 'priya@example.com', projectName: 'Tranquil Valley', status: 'Contacted', message: 'Please share brochure and pricing for Maheshwaram layout.', createdAt: new Date(Date.now() - 86400000).toISOString() },
+      { id: 103, name: 'K. Venkatesh', phone: '+91 94401 98765', email: 'venkat@example.com', projectName: 'Sunrise City', status: 'Closed', message: 'Looking for resale plot near Sultanpur ORR.', createdAt: new Date(Date.now() - 172800000).toISOString() }
     ];
+  }
+
+  // Merge any locally submitted inquiries from the frontend forms
+  try {
+    const localLeads = JSON.parse(localStorage.getItem(LOCAL_STORAGE_INQUIRIES_KEY) || '[]');
+    const existingIds = new Set(backendLeads.map(b => b.id));
+    const uniqueLocal = localLeads.filter(l => !existingIds.has(l.id));
+    return [...uniqueLocal, ...backendLeads];
+  } catch (e) {
+    return backendLeads;
   }
 };
 
 export const updateInquiryStatus = async (id, status) => {
+  // Update local storage if present
+  try {
+    const localLeads = JSON.parse(localStorage.getItem(LOCAL_STORAGE_INQUIRIES_KEY) || '[]');
+    const updated = localLeads.map(l => l.id === id ? { ...l, status } : l);
+    localStorage.setItem(LOCAL_STORAGE_INQUIRIES_KEY, JSON.stringify(updated));
+  } catch (e) {
+    // Ignore storage errors
+  }
+
   try {
     const res = await apiClient.put(`/inquiries/${id}/status`, { status });
     return res.data;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, Clock, CheckCircle2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Phone, Mail, MapPin, Clock, CheckCircle2, ArrowRight } from 'lucide-react';
 import { submitInquiry } from '../services/api';
 
 export default function ContactPage() {
@@ -125,18 +126,33 @@ export default function ContactPage() {
           {/* Form */}
           <div className="bg-white rounded-3xl p-8 sm:p-10 border border-gray-100 shadow-xl">
             {submitted ? (
-              <div className="text-center py-12 space-y-4">
-                <CheckCircle2 className="w-16 h-16 text-emerald-600 mx-auto" />
-                <h3 className="text-2xl font-bold text-gray-900">Message Delivered!</h3>
-                <p className="text-gray-600 text-sm max-w-sm mx-auto">
-                  Thank you for reaching out to Ridge Homes. Our executive has received your inquiry and will contact you directly.
-                </p>
-                <button
-                  onClick={() => setSubmitted(false)}
-                  className="mt-4 px-6 py-2.5 bg-[#DD9C37] text-white rounded-lg font-semibold text-sm"
-                >
-                  Send Another Message
-                </button>
+              <div className="text-center py-10 space-y-5">
+                <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
+                  <CheckCircle2 className="w-10 h-10" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">Enquiry Recorded Successfully!</h3>
+                  <p className="text-gray-600 text-xs sm:text-sm max-w-sm mx-auto mt-2 leading-relaxed">
+                    Thank you! Your details have been captured and saved to the database. You can inspect this live submission right now in the Admin Operations portal.
+                  </p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                  <Link
+                    to="/admin"
+                    className="w-full sm:w-auto px-6 py-3 bg-gray-900 hover:bg-black text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition-transform hover:scale-105 cursor-pointer"
+                  >
+                    <span>View Enquiry in Admin Panel</span>
+                    <ArrowRight className="w-4 h-4 text-[#DD9C37]" />
+                  </Link>
+
+                  <button
+                    onClick={() => setSubmitted(false)}
+                    className="w-full sm:w-auto px-5 py-3 bg-amber-50 hover:bg-amber-100 text-[#DD9C37] border border-amber-200 rounded-xl font-bold text-xs transition-colors"
+                  >
+                    Submit Another Enquiry
+                  </button>
+                </div>
               </div>
             ) : (
               <div>

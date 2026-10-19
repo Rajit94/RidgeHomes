@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { X, CheckCircle2, Calendar, Phone, Mail, User } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { X, CheckCircle2, Calendar, Phone, Mail, User, ArrowRight } from 'lucide-react';
 import { submitInquiry } from '../services/api';
 
 export default function SiteVisitModal({ isOpen, onClose, projectName = "General" }) {
@@ -48,23 +49,34 @@ export default function SiteVisitModal({ isOpen, onClose, projectName = "General
         </button>
 
         {submitted ? (
-          <div className="text-center py-8 space-y-4">
-            <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+          <div className="text-center py-6 space-y-4">
+            <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
               <CheckCircle2 className="w-10 h-10" />
             </div>
             <h3 className="text-2xl font-bold text-gray-900">Site Visit Booked!</h3>
-            <p className="text-gray-600 text-sm max-w-sm mx-auto">
-              Thank you for choosing Ridge Homes. Our dedicated relationship manager for <strong>{projectName}</strong> will call you within 15 minutes to confirm the timing and transportation.
+            <p className="text-gray-600 text-xs sm:text-sm max-w-sm mx-auto leading-relaxed">
+              Your inquiry for <strong>{projectName}</strong> has been saved. You can inspect this live lead in the Admin Operations Panel.
             </p>
-            <button
-              onClick={() => {
-                setSubmitted(false);
-                onClose();
-              }}
-              className="mt-4 px-6 py-2.5 bg-[#DD9C37] text-white rounded-lg font-semibold text-sm hover:bg-[#c9892c] transition-colors"
-            >
-              Done
-            </button>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+              <Link
+                to="/admin"
+                onClick={onClose}
+                className="w-full sm:w-auto px-5 py-2.5 bg-gray-900 hover:bg-black text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow"
+              >
+                <span>View in Admin Panel</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#DD9C37]" />
+              </Link>
+              <button
+                onClick={() => {
+                  setSubmitted(false);
+                  onClose();
+                }}
+                className="w-full sm:w-auto px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-xs"
+              >
+                Close
+              </button>
+            </div>
           </div>
         ) : (
           <div>
